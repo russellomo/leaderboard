@@ -3,20 +3,21 @@ import { ReactiveVar } from 'meteor/reactive-var';
 
 import './main.html';
 
-Template.hello.onCreated(function helloOnCreated() {
-  // counter starts at 0
-  this.counter = new ReactiveVar(0);
-});
+PlayersList = new Mongo.Collection('players');
+if(Meteor.isClient){
+  console.log("Hello client");
+  Template.leaderboard.player
 
-Template.hello.helpers({
-  counter() {
-    return Template.instance().counter.get();
-  },
-});
+  Template.leaderboard.events({
+    'click .player': function(){
+      console.log("You clicked a .player element");
+      Session.set('selectedPlayer', 'session value test');
+    }
+  });
+}
 
-Template.hello.events({
-  'click button'(event, instance) {
-    // increment the counter when button is clicked
-    instance.counter.set(instance.counter.get() + 1);
-  },
+Template.leaderboard.helpers({
+  'player': function(){
+    return PlayersList.find();
+  }
 });
